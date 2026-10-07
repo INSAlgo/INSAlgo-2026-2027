@@ -12,4 +12,4 @@ Fiche Python : [Fiche_Python.md](./Fiche_Python.md)
 
 ## Présentation
 
-[Slides](./00-Séance_d'introduction.pdf)
+[Slides](./Cours.pdf)
