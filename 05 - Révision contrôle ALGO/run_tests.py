@@ -1,6 +1,8 @@
 import argparse
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -22,13 +24,40 @@ def clip(text, limit=300):
     return text if len(text) <= limit else text[:limit] + f"... [{len(text)} caractères]"
 
 
-def run_one(solution, input_path, time_limit):
+def compile_c(source):
+    """Compile un fichier .c et renvoie le chemin du binaire."""
+    if shutil.which("gcc") is None:
+        sys.exit("gcc est introuvable : installez-le pour tester un fichier .c")
+    directory = Path(tempfile.mkdtemp(prefix="insalgo-"))
+    binary = directory / "solution"
+    proc = subprocess.run(
+        ["gcc", "-O2", "-std=c11", "-o", str(binary), str(source), "-lm"],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        message = (proc.stderr or proc.stdout).strip() or "échec de gcc"
+        sys.exit(f"Erreur de compilation :\n{message}")
+    return binary
+
+
+def command_for(solution):
+    """Commande à lancer pour un .py ou un .c."""
+    if solution.suffix == ".py":
+        return [sys.executable, str(solution)]
+    if solution.suffix == ".c":
+        print("Compilation...", flush=True)
+        return [str(compile_c(solution))]
+    sys.exit(f"Extension non gérée : {solution.suffix} (attendu : .py ou .c)")
+
+
+def run_one(command, input_path, time_limit):
     """Retourne (verdict, durée, stdout, stderr)."""
     with open(input_path, "rb") as f:
         start = time.perf_counter()
         try:
             proc = subprocess.run(
-                [sys.executable, str(solution)],
+                command,
                 stdin=f,
                 capture_output=True,
                 timeout=time_limit,
@@ -44,9 +73,9 @@ def run_one(solution, input_path, time_limit):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Teste une solution Python sur les tests d'un problème.")
+    parser = argparse.ArgumentParser(description="Teste une solution Python ou C sur les tests d'un problème.")
     parser.add_argument("problem", choices=sorted(DEFAULT_TIME_LIMIT), help="numéro du problème (1, 2 ou 3)")
-    parser.add_argument("solution", help="fichier Python à tester (ex : exo1.py)")
+    parser.add_argument("solution", help="fichier à tester (ex : exo1.py ou exo1.c)")
     parser.add_argument("-v", "--verbose", action="store_true", help="détaille les tests échoués")
     args = parser.parse_args()
 
@@ -59,10 +88,11 @@ def main():
     if not inputs:
         sys.exit("Aucun test trouvé.")
 
+    command = command_for(solution)
     print(f"Problème {args.problem} - {solution} - limite : {time_limit:g}s par test\n")
     passed = 0
     for path in inputs:
-        verdict, elapsed, out, err = run_one(solution, path, time_limit)
+        verdict, elapsed, out, err = run_one(command, path, time_limit)
         expected_path = path.with_suffix(".out")
         expected = expected_path.read_text() if expected_path.exists() else None
         if verdict == "OK" and expected is not None and out.split() != expected.split():

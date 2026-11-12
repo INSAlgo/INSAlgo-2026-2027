@@ -4,7 +4,7 @@
 
 Exercices de révision en vue de l'examen d'ALGO.
 
-Chaque problème est fourni avec des tests dans `tests/<numéro>/` et un script pour tester sa solution Python.
+Chaque problème est fourni avec des tests dans `tests/<numéro>/` et un script pour tester une solution Python ou C.
 
 Les énoncés sont dans
 - [probleme1.pdf](./probleme1.pdf)
@@ -13,13 +13,14 @@ Les énoncés sont dans
 
 ## Tester sa solution
 
-Écrire sa solution dans un fichier (par exemple `exo1.py`), qui lit l'entrée sur `stdin` et écrit sur `stdout`, puis lancer :
+Écrire sa solution dans un fichier qui lit l'entrée sur `stdin` et écrit sur `stdout`, puis lancer :
 
 ```bash
-python3 run_tests.py 1 exo1.py          # problème 1
-python3 run_tests.py 2 exo2.py          # problème 2
-python3 run_tests.py 3 exo3.py          # problème 3
+python3 run_tests.py 1 exo1.py          # Python
+python3 run_tests.py 1 exo1.c           # C (compilé avec gcc -O2 -std=c11)
 ```
+
+Un fichier `.c` est compilé une fois avant les tests. La compilation n'est pas comptée dans la limite de temps. Si `gcc` échoue, le script s'arrête et affiche l'erreur.
 
 L'option `-v` : affiche l'entrée, la sortie attendue et la sortie obtenue pour les tests échoués.
 
