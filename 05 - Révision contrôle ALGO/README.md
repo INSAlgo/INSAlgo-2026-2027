@@ -24,10 +24,7 @@ Un fichier `.c` est compilé une fois avant les tests. La compilation n'est pas 
 
 L'option `-v` : affiche l'entrée, la sortie attendue et la sortie obtenue pour les tests échoués.
 
-Limites de temps par test :
-- Problème 1 : 2s
-- Problème 2 : 2s
-- Problème 3 : 5s
+La limite de temps par test pour tous les problèmes est de 1 seconde. 
 
 Verdicts possibles :
 - `OK`

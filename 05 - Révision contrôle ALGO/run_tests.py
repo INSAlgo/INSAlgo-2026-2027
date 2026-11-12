@@ -9,7 +9,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 TEST_DIR = HERE / "tests"
 
-DEFAULT_TIME_LIMIT = {"1": 2.0, "2": 2.0, "3": 5.0}
+DEFAULT_TIME_LIMIT = 1
 
 USE_COLOR = sys.stdout.isatty()
 COLORS = {"OK": "32", "WA": "31", "TLE": "33", "RE": "35"}
@@ -74,7 +74,7 @@ def run_one(command, input_path, time_limit):
 
 def main():
     parser = argparse.ArgumentParser(description="Teste une solution Python ou C sur les tests d'un problème.")
-    parser.add_argument("problem", choices=sorted(DEFAULT_TIME_LIMIT), help="numéro du problème (1, 2 ou 3)")
+    parser.add_argument("problem", choices=("1", "2", "3"), help="numéro du problème (1, 2 ou 3)")
     parser.add_argument("solution", help="fichier à tester (ex : exo1.py ou exo1.c)")
     parser.add_argument("-v", "--verbose", action="store_true", help="détaille les tests échoués")
     args = parser.parse_args()
@@ -83,16 +83,15 @@ def main():
     if not solution.is_file():
         sys.exit(f"Fichier introuvable : {solution}")
 
-    time_limit = DEFAULT_TIME_LIMIT[args.problem]
     inputs = sorted((TEST_DIR / args.problem).glob("*.in"))
     if not inputs:
         sys.exit("Aucun test trouvé.")
 
     command = command_for(solution)
-    print(f"Problème {args.problem} - {solution} - limite : {time_limit:g}s par test\n")
+    print(f"Problème {args.problem} - {solution} - limite : {DEFAULT_TIME_LIMIT:g}s par test\n")
     passed = 0
     for path in inputs:
-        verdict, elapsed, out, err = run_one(command, path, time_limit)
+        verdict, elapsed, out, err = run_one(command, path, DEFAULT_TIME_LIMIT)
         expected_path = path.with_suffix(".out")
         expected = expected_path.read_text() if expected_path.exists() else None
         if verdict == "OK" and expected is not None and out.split() != expected.split():
@@ -101,7 +100,7 @@ def main():
             passed += 1
 
         label = color(f"{verdict:<3}", COLORS[verdict])
-        time_str = f">{time_limit:g}s" if verdict == "TLE" else f"{elapsed:.3f}s"
+        time_str = f">{DEFAULT_TIME_LIMIT:g}s" if verdict == "TLE" else f"{elapsed:.3f}s"
         print(f"  {label}  {path.stem:<45} {time_str:>8}")
 
         if args.verbose and verdict != "OK":
