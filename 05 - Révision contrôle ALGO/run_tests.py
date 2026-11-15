@@ -74,7 +74,7 @@ def run_one(command, input_path, time_limit):
 
 def main():
     parser = argparse.ArgumentParser(description="Teste une solution Python ou C sur les tests d'un problème.")
-    parser.add_argument("problem", choices=("1", "2", "3"), help="numéro du problème (1, 2 ou 3)")
+    parser.add_argument("problem", choices=("1", "2", "3", "4"), help="numéro du problème (1, 2, 3 ou 4)")
     parser.add_argument("solution", help="fichier à tester (ex : exo1.py ou exo1.c)")
     parser.add_argument("-v", "--verbose", action="store_true", help="détaille les tests échoués")
     args = parser.parse_args()

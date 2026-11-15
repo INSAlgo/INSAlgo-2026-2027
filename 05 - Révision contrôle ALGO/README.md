@@ -10,6 +10,7 @@ Les énoncés sont dans
 - [probleme1.pdf](./probleme1.pdf)
 - [probleme2.pdf](./probleme2.pdf)
 - [probleme3.pdf](./probleme3.pdf)
+- [probleme4.pdf](./probleme4.pdf)
 
 ## Tester sa solution
 
