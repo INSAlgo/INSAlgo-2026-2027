@@ -32,7 +32,7 @@ def compile_c(source):
     binary = directory / "solution"
     proc = subprocess.run(
         ["gcc", "-O2", "-std=c11", "-o", str(binary), str(source), "-lm"],
-        capture_output=True,
+        check=False, capture_output=True,
         text=True,
     )
     if proc.returncode != 0:
@@ -58,7 +58,7 @@ def run_one(command, input_path, time_limit):
         try:
             proc = subprocess.run(
                 command,
-                stdin=f,
+                check=False, stdin=f,
                 capture_output=True,
                 timeout=time_limit,
             )
