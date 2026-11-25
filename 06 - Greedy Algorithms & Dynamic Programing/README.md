@@ -1,14 +1,11 @@
-# 02 - Data Structures - 14/10/2026
+# 06 - Greedy Algorithms & Dynamic Programing - 25/11/2026
 
 ## Contenu
 
-- Liste/vecteur (Dynamic array)
-- Liste chaînée (Linked list)
-- Pile (Stack)
-- File Queue
-- Ensembles (Set)
+- Greedy Algorithms
+- Dynamic Programing
 
-Lien du contest : https://vjudge.net/contest/858124#overview
+Lien du contest : https://vjudge.net/contest/870157#overview
 
 Code : `insalgo`
 
